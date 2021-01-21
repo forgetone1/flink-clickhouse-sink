@@ -3,20 +3,20 @@ package ru.ivi.opensource.flinkclickhousesink.model;
 import java.util.List;
 
 public class ClickHouseRequestBlank {
-    private final List<String> values;
+    private final List<Object> values;
     private final String targetTable;
     private int attemptCounter;
 
     private Exception exception;
 
-    public ClickHouseRequestBlank(List<String> values, String targetTable, Exception exception) {
+    public ClickHouseRequestBlank(List<Object> values, String targetTable, Exception exception) {
         this.values = values;
         this.targetTable = targetTable;
         this.attemptCounter = 0;
         this.exception = exception;
     }
 
-    public List<String> getValues() {
+    public List<Object> getValues() {
         return values;
     }
 
@@ -41,7 +41,7 @@ public class ClickHouseRequestBlank {
     }
 
     public static final class Builder {
-        private List<String> values;
+        private List<Object> values;
         private String targetTable;
         private Exception exception;
 
@@ -52,7 +52,7 @@ public class ClickHouseRequestBlank {
             return new Builder();
         }
 
-        public Builder withValues(List<String> values) {
+        public Builder withValues(List<Object> values) {
             this.values = values;
             return this;
         }

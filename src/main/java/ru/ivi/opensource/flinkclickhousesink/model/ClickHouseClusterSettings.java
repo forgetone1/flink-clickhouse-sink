@@ -16,26 +16,30 @@ public class ClickHouseClusterSettings {
     public static final String CLICKHOUSE_HOSTS = "clickhouse.access.hosts";
     public static final String CLICKHOUSE_USER = "clickhouse.access.user";
     public static final String CLICKHOUSE_PASSWORD = "clickhouse.access.password";
+    public static final String CLICKHOUSE_DATABASE = "clickhouse.access.database";
 
     private final List<String> hostsWithPorts;
     private final String user;
+    private final String database;
     private final String password;
     private final String credentials;
     private final boolean authorizationRequired;
 
     private int currentHostId = 0;
 
-    public ClickHouseClusterSettings(Map<String, String> parameters) {
+    public ClickHouseClusterSettings(Map<String, String> parameters, ClientProtocol clientProtocol) {
         Preconditions.checkNotNull(parameters);
 
         String hostsString = parameters.get(CLICKHOUSE_HOSTS);
         Preconditions.checkNotNull(hostsString);
 
-        hostsWithPorts = buildHostsAndPort(hostsString);
+        hostsWithPorts = buildHostsAndPort(hostsString, clientProtocol);
         Preconditions.checkArgument(hostsWithPorts.size() > 0);
 
         String usr = parameters.get(CLICKHOUSE_USER);
         String pass = parameters.get(CLICKHOUSE_PASSWORD);
+
+        database = parameters.get(CLICKHOUSE_DATABASE);
 
         if (StringUtils.isNotEmpty(usr) && StringUtils.isNotEmpty(pass)) {
             user = parameters.get(CLICKHOUSE_USER);
@@ -52,11 +56,17 @@ public class ClickHouseClusterSettings {
         }
     }
 
-    private static List<String> buildHostsAndPort(String hostsString) {
-        return Arrays.stream(hostsString
-                .split(ConfigUtil.HOST_DELIMITER))
-                .map(ClickHouseClusterSettings::checkHttpAndAdd)
-                .collect(Collectors.toList());
+    private static List<String> buildHostsAndPort(String hostsString, ClientProtocol clientProtocol) {
+        if (clientProtocol == ClientProtocol.TCP) {
+            return Arrays.stream(hostsString
+                    .split(ConfigUtil.HOST_DELIMITER))
+                    .collect(Collectors.toList());
+        } else {
+            return Arrays.stream(hostsString
+                    .split(ConfigUtil.HOST_DELIMITER))
+                    .map(ClickHouseClusterSettings::checkHttpAndAdd)
+                    .collect(Collectors.toList());
+        }
     }
 
     private static String checkHttpAndAdd(String host) {
@@ -97,6 +107,10 @@ public class ClickHouseClusterSettings {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getDatabase() {
+        return database;
     }
 
     public String getCredentials() {

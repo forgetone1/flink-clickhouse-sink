@@ -20,7 +20,7 @@ public class ClickHouseSinkBuffer implements AutoCloseable {
     private final String targetTable;
     private final int maxFlushBufferSize;
     private final long timeoutMillis;
-    private final List<String> localValues;
+    private final List<Object> localValues;
     private final List<CompletableFuture<Boolean>> futures;
 
     private volatile long lastAddTimeMillis = 0L;
@@ -47,9 +47,9 @@ public class ClickHouseSinkBuffer implements AutoCloseable {
         return targetTable;
     }
 
-    public void put(String recordAsCSV) {
+    public void put(Object record) {
         tryAddToQueue();
-        localValues.add(recordAsCSV);
+        localValues.add(record);
         lastAddTimeMillis = System.currentTimeMillis();
     }
 
@@ -60,7 +60,7 @@ public class ClickHouseSinkBuffer implements AutoCloseable {
     }
 
     private void addToQueue() {
-        List<String> deepCopy = buildDeepCopy(localValues);
+        List<Object> deepCopy = buildDeepCopy(localValues);
         ClickHouseRequestBlank params = ClickHouseRequestBlank.Builder
                 .aBuilder()
                 .withValues(deepCopy)
@@ -90,7 +90,7 @@ public class ClickHouseSinkBuffer implements AutoCloseable {
         return current - lastAddTimeMillis > timeoutMillis;
     }
 
-    private static List<String> buildDeepCopy(List<String> original) {
+    private static List<Object> buildDeepCopy(List<Object> original) {
         return Collections.unmodifiableList(new ArrayList<>(original));
     }
 

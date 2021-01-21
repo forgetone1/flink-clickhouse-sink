@@ -10,7 +10,7 @@ public class ExceptionsThrowableSink implements Sink {
     }
 
     @Override
-    public void put(String message) throws ExecutionException, InterruptedException {
+    public void put(Object message) throws ExecutionException, InterruptedException {
         clickHouseSinkBuffer.put(message);
         clickHouseSinkBuffer.assertFuturesNotFailedYet();
     }

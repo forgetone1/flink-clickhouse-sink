@@ -18,11 +18,12 @@ public class ClickHouseSinkCommonParams {
     private final int timeout;
     private final int maxRetries;
 
-    public ClickHouseSinkCommonParams(Map<String, String> params) {
+    public ClickHouseSinkCommonParams(Map<String, String> params, ClientProtocol clientProtocol) {
         Preconditions.checkNotNull(params.get(IGNORING_CLICKHOUSE_SENDING_EXCEPTION_ENABLED),
                 "Parameter " + IGNORING_CLICKHOUSE_SENDING_EXCEPTION_ENABLED + " must be initialized");
 
-        this.clickHouseClusterSettings = new ClickHouseClusterSettings(params);
+
+        this.clickHouseClusterSettings = new ClickHouseClusterSettings(params,clientProtocol);
         this.numWriters = Integer.parseInt(params.get(NUM_WRITERS));
         this.queueMaxCapacity = Integer.parseInt(params.get(QUEUE_MAX_CAPACITY));
         this.maxRetries = Integer.parseInt(params.get(NUM_RETRIES));

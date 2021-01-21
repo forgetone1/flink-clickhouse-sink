@@ -47,6 +47,8 @@
 
         <!-- Plugins version -->
         <mvn.compiler.version>3.7.0</mvn.compiler.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <clickhouse-native-jdbc.version>2.5.2</clickhouse-native-jdbc.version>
     </properties>
 
     <scm>
@@ -105,6 +107,23 @@
     </licenses>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.housepower</groupId>
+            <artifactId>clickhouse-native-jdbc-shaded</artifactId>
+            <version>${clickhouse-native-jdbc.version}</version>
+        </dependency>
+
+        <!-- normal version -->
+        <dependency>
+            <groupId>com.github.housepower</groupId>
+            <artifactId>clickhouse-native-jdbc</artifactId>
+            <version>${clickhouse-native-jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.typesafe</groupId>

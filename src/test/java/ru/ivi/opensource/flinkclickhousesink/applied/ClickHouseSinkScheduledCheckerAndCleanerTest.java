@@ -9,10 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseClusterSettings;
+import ru.ivi.opensource.flinkclickhousesink.model.*;
 import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseSinkCommonParams;
-import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseSinkCommonParams;
-import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseSinkConst;
 import ru.ivi.opensource.flinkclickhousesink.util.ConfigUtil;
 
 import java.util.Collections;
@@ -41,7 +39,7 @@ public class ClickHouseSinkScheduledCheckerAndCleanerTest {
         params.put(ClickHouseClusterSettings.CLICKHOUSE_HOSTS, "http://localhost:8123");
         params.put(ClickHouseSinkConst.IGNORING_CLICKHOUSE_SENDING_EXCEPTION_ENABLED, "true");
 
-        ClickHouseSinkCommonParams commonParams = new ClickHouseSinkCommonParams(params);
+        ClickHouseSinkCommonParams commonParams = new ClickHouseSinkCommonParams(params, ClientProtocol.HTTP);
         checker = new ClickHouseSinkScheduledCheckerAndCleaner(commonParams, futures);
 
         MockitoAnnotations.initMocks(this);

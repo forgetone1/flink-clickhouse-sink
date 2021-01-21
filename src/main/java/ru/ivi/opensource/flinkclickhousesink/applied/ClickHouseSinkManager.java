@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.ivi.opensource.flinkclickhousesink.model.ClickHouseSinkCommonParams;
+import ru.ivi.opensource.flinkclickhousesink.model.ClientProtocol;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -19,10 +20,14 @@ public class ClickHouseSinkManager implements AutoCloseable {
     private final ClickHouseSinkCommonParams sinkParams;
     private final List<CompletableFuture<Boolean>> futures = Collections.synchronizedList(new LinkedList<>());
     private volatile boolean isClosed = false;
+    private final ClientProtocol clientProtocol;
 
-    public ClickHouseSinkManager(Map<String, String> globalParams) {
-        sinkParams = new ClickHouseSinkCommonParams(globalParams);
-        clickHouseWriter = new ClickHouseWriter(sinkParams, futures);
+
+    public ClickHouseSinkManager(Map<String, String> globalParams, ClientService clientService,
+                                 ClientProtocol clientProtocol) {
+        this.clientProtocol = clientProtocol;
+        sinkParams = new ClickHouseSinkCommonParams(globalParams, this.clientProtocol);
+        clickHouseWriter = new ClickHouseWriter(sinkParams, futures, clientService);
         clickHouseSinkScheduledCheckerAndCleaner = new ClickHouseSinkScheduledCheckerAndCleaner(sinkParams, futures);
         logger.info("Build sink writer's manager. params = {}", sinkParams.toString());
     }

@@ -8,7 +8,7 @@ public class UnexceptionableSink implements Sink {
     }
 
     @Override
-    public void put(String message) {
+    public void put(Object message) {
         clickHouseSinkBuffer.put(message);
     }
 
